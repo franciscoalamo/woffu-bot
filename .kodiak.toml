@@ -156,8 +156,8 @@ cut_body_before = "<!-- commit body -->"
 # `update.require_automerge_label = false`.
 #
 # When enabled, _Kodiak will not be able to efficiently update PRs._ If you have
-# multiple PRs against a target like `master`, any time a commit is added to
-# `master` _all_ of those PRs against `master` will update. For `N` PRs against
+# multiple PRs against a target like `main`, any time a commit is added to
+# `main` _all_ of those PRs against `main` will update. For `N` PRs against
 # a target you will see at least `N(N-1)/2` updates. If this configuration
 # option was disabled you would only see at least `N-1` updates.
 always = false # default: false
