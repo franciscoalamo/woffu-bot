@@ -3,7 +3,7 @@ import { createLogger, format, transports } from "winston";
 import "winston-daily-rotate-file";
 
 export const LOG_DIR = "log";
-export const PROJECT = "pvpc-influxdb";
+export const PROJECT = "woffu-bot";
 
 // Create a logger with winston
 const logger = createLogger({
