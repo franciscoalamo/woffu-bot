@@ -1,6 +1,42 @@
 import axios from "axios";
 import * as jwt from "jsonwebtoken";
+import logger from "../../logger";
+
 const URL = process.env.WOFFU_URL;
+
+export const buildAxiosOptionsWithToken = (token: string) => ({
+  headers: {
+    Authorization: `bearer ${token}`,
+    "content-type": "application/json",
+  },
+});
+
+export const getUserIdFromToken = (token: string) => jwt.decode(token).UserId;
+
+export const isHoliday = async (token: string) => {
+  const today = new Date().toISOString().substring(0, 10);
+  const url = `${URL}/api/users/${getUserIdFromToken(
+    token,
+  )}/diaries/absence/single_events?fromDate=${today}&presence=false&toDate=${today}`;
+  const response = await axios.get(url, buildAxiosOptionsWithToken(token));
+
+  if (response.data.Events.length > 0 && response.data.Events[0].isDisabled) {
+    logger.info(`Non-working day found: ${response.data.Events}`);
+    return true;
+  }
+  return false;
+};
+
+export const isCurrentlySigned = async (token: string) => {
+  const signs = await axios.get(
+    `${URL}/api/signs`,
+    buildAxiosOptionsWithToken(token),
+  );
+  return signs.data.length > 0 && signs.data[signs.data.length - 1].SignIn;
+};
+
+export const getUsernameFromToken = (token: string) =>
+  jwt.decode(token).unique_name;
 
 export const getToken = async (username: string, password: string) => {
   const response = await axios.post(
@@ -29,92 +65,53 @@ export const getToken = async (username: string, password: string) => {
         "user-agent":
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
       },
-    }
+    },
   );
   return response.data.access_token;
 };
 
 export const signIn = async (token: string): Promise<boolean> => {
-  let data = {
+  const data = {
     TimezoneOffset: new Date().getTimezoneOffset(),
     UserId: getUserIdFromToken(token),
   };
   if (await isCurrentlySigned(token)) {
-    console.log(
+    logger.info(
       `Skipping signin for user ${getUsernameFromToken(
-        token
-      )} because is already signed.`
+        token,
+      )} because is already signed.`,
     );
     return false;
   }
 
   if (await isHoliday(token)) {
-    console.log(
+    logger.info(
       `Skipping signin for user ${getUsernameFromToken(
-        token
-      )} because today is a non-working day.`
+        token,
+      )} because today is a non-working day.`,
     );
     return false;
   }
 
   await axios.post(`${URL}/api/signs`, data, buildAxiosOptionsWithToken(token));
-  console.log(`${getUsernameFromToken(token)} signed in.`);
+  logger.info(`${getUsernameFromToken(token)} signed in.`);
   return true;
 };
 
 export const signOut = async (token: string): Promise<boolean> => {
-  let data = {
+  const data = {
     TimezoneOffset: new Date().getTimezoneOffset(),
     UserId: getUserIdFromToken(token),
   };
   if (!(await isCurrentlySigned(token))) {
-    console.log(
+    logger.info(
       `Skipping signout because user ${getUsernameFromToken(
-        token
-      )} is not signed.`
+        token,
+      )} is not signed.`,
     );
     return false;
   }
   await axios.post(`${URL}/api/signs`, data, buildAxiosOptionsWithToken(token));
-  console.log(`${getUsernameFromToken(token)} signed out.`);
+  logger.info(`${getUsernameFromToken(token)} signed out.`);
   return true;
-};
-
-export const buildAxiosOptionsWithToken = (token: string) => {
-  return {
-    headers: {
-      Authorization: `bearer ${token}`,
-      "content-type": "application/json",
-    },
-  };
-};
-
-export const getUserIdFromToken = (token: string) => {
-  return jwt.decode(token).UserId;
-};
-
-export const isHoliday = async (token: string) => {
-  let today = new Date().toISOString().substring(0, 10);
-  let url = `${URL}/api/users/${getUserIdFromToken(
-    token
-  )}/diaries/absence/single_events?fromDate=${today}&presence=false&toDate=${today}`;
-  let response = await axios.get(url, buildAxiosOptionsWithToken(token));
-
-  if (response.data.Events.length > 0 && response.data.Events[0].isDisabled) {
-    console.log(`Non-working day found: ${response.data.Events}`);
-    return true;
-  }
-  return false;
-};
-
-export const isCurrentlySigned = async (token: string) => {
-  let signs = await axios.get(
-    `${URL}/api/signs`,
-    buildAxiosOptionsWithToken(token)
-  );
-  return signs.data.length > 0 && signs.data[signs.data.length - 1].SignIn;
-};
-
-export const getUsernameFromToken = (token: string) => {
-  return jwt.decode(token).unique_name;
 };

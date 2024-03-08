@@ -23,7 +23,9 @@
   "devDependencies": {
     "@commitlint/cli": "17.8.0",
     "@commitlint/config-conventional": "17.8.0",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
+    "env-cmd": "^10.1.0",
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
@@ -33,7 +35,6 @@
     "eslint-plugin-unicorn": "^48.0.1",
     "husky": "^8.0.3",
     "prettier": "^3.2.5",
-    "env-cmd": "^10.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
@@ -42,6 +43,8 @@
     "axios": "^0.19.2",
     "axios-retry": "^3.1.8",
     "cron": "^3.1.6",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "winston": "^3.12.0",
+    "winston-daily-rotate-file": "^5.0.0"
   }
 }
