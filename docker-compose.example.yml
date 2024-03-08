@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  woffu-bot:
+    image: ghcr.io/franciscoalamo/woffu-bot
+    container_name: woffu-bot
+    environment:
+      - WOFFU_URL=https://app.woffu.com
+      - WOFFU_USERNAME=your_username,your_username2
+      - WOFFU_PASSWORD=your_password,your_password2
+    restart: unless-stopped

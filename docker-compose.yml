@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  woffu-bot:
+    build: .
+    image: multithefranky/woffu-bot
+    platform: linux/amd64
+    container_name: woffu-bot
+    restart: unless-stopped
