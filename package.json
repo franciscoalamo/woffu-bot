@@ -39,7 +39,7 @@
     "typescript": "^5.4.2"
   },
   "dependencies": {
-    "@types/node": "^20.11.24",
+    "@types/node": "^20.11.25",
     "axios": "^0.28.0",
     "axios-retry": "^3.1.8",
     "cron": "^3.1.6",
