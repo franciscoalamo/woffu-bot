@@ -36,10 +36,10 @@
     "husky": "^9.0.11",
     "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.3"
   },
   "dependencies": {
-    "@types/node": "^20.11.25",
+    "@types/node": "^20.11.30",
     "axios": "^0.28.0",
     "axios-retry": "^3.1.8",
     "cron": "^3.1.6",
