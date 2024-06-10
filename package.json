@@ -42,7 +42,7 @@
     "@types/node": "^20.14.2",
     "axios": "^0.28.0",
     "axios-retry": "^3.1.8",
-    "cron": "^3.1.6",
+    "cron": "^3.1.7",
     "jsonwebtoken": "^9.0.2",
     "winston": "^3.13.0",
     "winston-daily-rotate-file": "^5.0.0"
